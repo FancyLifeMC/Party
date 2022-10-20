@@ -13,6 +13,7 @@ public class EventListener implements Listener {
     public void onChatEvent(AsyncPlayerChatEvent event) {
         PartyGroup group = PartyDataManager.getGroup(event.getPlayer());
 
+
         if (group != null && group.isToggledChat()) {
             group.chat(event.getMessage());
         }
