@@ -5,9 +5,10 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PartyDataManager {
-    private static final Map<UUID, PartyGroup> party = new HashMap<>();
+    private static final Map<UUID, PartyGroup> party = new ConcurrentHashMap<>();
 
     public static Map<UUID, PartyGroup> getParty() {
         return party;
@@ -17,14 +18,21 @@ public class PartyDataManager {
         return party.get(player.getUniqueId());
     }
 
-    public static void removeParty(UUID target) {
-        PartyGroup group = party.remove(target);
+    public static void removeParty(Player player) {
+        PartyGroup group = party.remove(player.getUniqueId());
 
         if (group != null) {
             group.getTargetPartyGroup().getPartyUsers().forEach(v -> {
                 party.remove(v.getPlayer().getUniqueId());
             });
         }
+    }
+
+    /**
+     * @param group パーティーから削除するプレイヤー
+     */
+    public static void leaveParty(PartyGroup group) {
+        group.getTargetPartyGroup().getPartyUsers().remove(group);
     }
 
     public static boolean createParty(Player player) {

@@ -3,6 +3,7 @@ package me.koutachan.party.data;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class PartyGroup {
         this.owner = player.getUniqueId().equals(targetParty);
 
         if (owner) {
-            partyUsers = new ArrayList<>();
+            partyUsers = Arrays.asList(this);
         }
     }
 
@@ -42,7 +43,7 @@ public class PartyGroup {
     }
 
     /**
-     * @return Partyに入っているユーザーのUUID
+     * @return Partyに入っているユーザー
      * @implNote
      * <li> オーナーのみ (パフォーマンスの観点)
      * <li> {@link #getTargetPartyGroup()} を実行してから使用してください
@@ -68,5 +69,11 @@ public class PartyGroup {
 
     public boolean isOwner() {
         return owner;
+    }
+
+    public void chat(String message) {
+        getTargetPartyGroup().getPartyUsers().forEach(v -> {
+            v.getPlayer().sendMessage(message);
+        });
     }
 }

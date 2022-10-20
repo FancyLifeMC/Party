@@ -1,6 +1,8 @@
 package me.koutachan.party;
 
+import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.arguments.TextArgument;
 import me.koutachan.party.data.PartyDataManager;
 import me.koutachan.party.data.PartyGroup;
@@ -9,13 +11,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class Party extends JavaPlugin {
 
     @Override
+    public void onLoad() {
+        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(true));
+    }
+
+    @Override
     public void onEnable() {
+        CommandAPI.onEnable(this);
+
         // Plugin startup logic
         new CommandAPICommand("party")
                 .withSubcommand(new CommandAPICommand("create")
                         .executesPlayer((player, args) -> {
-                            if (!PartyDataManager.isJoinedParty(player)) {
+                            PartyGroup group = PartyDataManager.getGroup(player);
 
+                            if (group == null) {
+                                PartyDataManager.createParty(player);
                             } else {
 
                             }
@@ -26,7 +37,7 @@ public final class Party extends JavaPlugin {
 
                             if (group != null) {
                                 if (group.isOwner()) {
-                                    PartyDataManager.removeParty(player.getUniqueId());
+                                    PartyDataManager.removeParty(player);
                                 } else {
 
                                 }
@@ -47,10 +58,24 @@ public final class Party extends JavaPlugin {
                 .withSubcommand(new CommandAPICommand("chat")
                         .withArguments(new TextArgument("text"))
                         .executesPlayer((player, args) -> {
-                            if (args.length != 0 && PartyDataManager.isJoinedParty(player)) {
-                                String chat = String.join("", (String[]) args);
+                            PartyGroup group = PartyDataManager.getGroup(player);
 
-                                PartyDataManager.getParty().get(player.getUniqueId()).getPartyUsers().forEach(v -> v.getPlayer().sendMessage(chat));
+                            if (group != null) {
+                                group.chat((String) args[0]);
+                            }
+                        }))
+                .withSubcommand(new CommandAPICommand("leave")
+                        .executesPlayer((player, args) -> {
+                            PartyGroup group = PartyDataManager.getGroup(player);
+
+                            if (group != null) {
+                                if (!group.isOwner()) {
+                                    PartyDataManager.leaveParty(group);
+                                } else {
+
+                                }
+                            } else {
+                                //todo:; add messages
                             }
                         }))
                 .register();

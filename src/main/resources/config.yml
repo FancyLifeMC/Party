@@ -1,9 +1,8 @@
 messages:
-  values:
-    on: 'オン'
-    off: 'オフ'
   create-party: '[Party] パーティーを作成しました'
   delete-party: '[Party] パーティーを削除しました'
-  toggle-chat-on: '[Party] チャットをパーティーに送るようにしました'
-  toggle-chat-off: '[Party] チャットをパーティーに送らないようにしました'
+  already-joined-party: '[Party] 既にパーティーに入っています！ (%user% のパーティー)'
+  toggle-chat-on: '[Party] パーティーチャットをオンにしました'
+  toggle-chat-off: '[Party] パーティーチャットをオフにしました'
   not-owner: '[Party] あなたはこのパーティーのオーナーではありません！'
+  party-chat: '[Party] <%name%>: %chat%'
