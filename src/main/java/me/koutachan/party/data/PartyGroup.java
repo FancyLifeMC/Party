@@ -10,17 +10,33 @@ public class PartyGroup {
     private final Player player;
     private final UUID targetParty;
 
-    private final List<PartyGroup> partyUsers = new ArrayList<>();
+    private List<PartyGroup> partyUsers;
+    private boolean toggledChat, owner;
 
+    /**
+     * @param player プレイヤー
+     * @param targetParty オーナーのUUID
+     */
     public PartyGroup(Player player, UUID targetParty) {
         this.player = player;
         this.targetParty = targetParty;
+        this.owner = player.getUniqueId().equals(targetParty);
+
+        if (owner) {
+            partyUsers = new ArrayList<>();
+        }
     }
 
+    /**
+     * @return オーナーのパーティーグループを取得します
+     */
     public PartyGroup getTargetPartyGroup() {
         return PartyDataManager.getParty().get(targetParty);
     }
 
+    /**
+     * @return オーナーのUUIDを取得します
+     */
     public UUID getTargetPartyUUID() {
         return targetParty;
     }
@@ -29,7 +45,7 @@ public class PartyGroup {
      * @return Partyに入っているユーザーのUUID
      * @implNote
      * <li> オーナーのみ (パフォーマンスの観点)
-     * <li> {@link #getTargetPartyGroup()} を使用してください
+     * <li> {@link #getTargetPartyGroup()} を実行してから使用してください
      */
     public List<PartyGroup> getPartyUsers() {
         return partyUsers;
@@ -40,5 +56,17 @@ public class PartyGroup {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    public boolean isToggledChat() {
+        return toggledChat;
+    }
+
+    public void setToggledChat(boolean toggledChat) {
+        this.toggledChat = toggledChat;
+    }
+
+    public boolean isOwner() {
+        return owner;
     }
 }

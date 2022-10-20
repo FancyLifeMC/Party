@@ -1,0 +1,9 @@
+messages:
+  values:
+    on: 'オン'
+    off: 'オフ'
+  create-party: '[Party] パーティーを作成しました'
+  delete-party: '[Party] パーティーを削除しました'
+  toggle-chat-on: '[Party] チャットをパーティーに送るようにしました'
+  toggle-chat-off: '[Party] チャットをパーティーに送らないようにしました'
+  not-owner: '[Party] あなたはこのパーティーのオーナーではありません！'

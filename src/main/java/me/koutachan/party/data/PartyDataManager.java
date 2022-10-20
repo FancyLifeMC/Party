@@ -13,17 +13,18 @@ public class PartyDataManager {
         return party;
     }
 
-    public static boolean removeParty(UUID target) {
-        PartyGroup group = party.get(target);
+    public static PartyGroup getGroup(Player player) {
+        return party.get(player.getUniqueId());
+    }
+
+    public static void removeParty(UUID target) {
+        PartyGroup group = party.remove(target);
 
         if (group != null) {
             group.getTargetPartyGroup().getPartyUsers().forEach(v -> {
-                //TODO: Add Messages
                 party.remove(v.getPlayer().getUniqueId());
             });
         }
-
-        return group != null;
     }
 
     public static boolean createParty(Player player) {
@@ -35,5 +36,9 @@ public class PartyDataManager {
         }
 
         return group == null;
+    }
+
+    public static boolean isJoinedParty(Player player) {
+        return party.containsKey(player.getUniqueId());
     }
 }
