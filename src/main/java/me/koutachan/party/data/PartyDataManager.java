@@ -18,14 +18,15 @@ public class PartyDataManager {
         return party.get(player.getUniqueId());
     }
 
-    public static void removeParty(Player player) {
-        PartyGroup group = party.remove(player.getUniqueId());
-
-        if (group != null) {
-            group.getTargetPartyGroup().getPartyUsers().forEach(v -> {
-                party.remove(v.getPlayer().getUniqueId());
-            });
-        }
+    /**
+     * @param group 削除するグループ
+     * @implNote
+     * <li>安全にパーティーを削除します
+     */
+    public static void removeParty(PartyGroup group) {
+        group.getTargetPartyGroup().getPartyUsers().forEach(v -> {
+            party.remove(v.getPlayer().getUniqueId());
+        });
     }
 
     /**
@@ -35,17 +36,11 @@ public class PartyDataManager {
         group.getTargetPartyGroup().getPartyUsers().remove(group);
     }
 
-    public static boolean createParty(Player player) {
-        PartyGroup group = party.get(player.getUniqueId());
-
-        if (group == null) {
-            //new party
-            party.put(player.getUniqueId(), new PartyGroup(player, player.getUniqueId()));
-        }
-
-        return group == null;
+    public static void createParty(PartyGroup group) {
+        party.put(group.getPlayer().getUniqueId(), group);
     }
 
+    @Deprecated
     public static boolean isJoinedParty(Player player) {
         return party.containsKey(player.getUniqueId());
     }

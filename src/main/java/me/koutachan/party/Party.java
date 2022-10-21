@@ -9,17 +9,24 @@ import me.koutachan.party.data.PartyDataManager;
 import me.koutachan.party.data.PartyGroup;
 import me.koutachan.party.event.EventListener;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Party extends JavaPlugin {
 
+    private static Party INSTANCE;
+
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
+        INSTANCE = this;
+
+        CommandAPI.onLoad(new CommandAPIConfig());
     }
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         CommandAPI.onEnable(this);
         CommandAPI.registerCommand(PartyCommand.class);
 
@@ -29,5 +36,13 @@ public final class Party extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static Party getInstance() {
+        return INSTANCE;
+    }
+
+    public String getString(String key) {
+        return ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages." + key));
     }
 }

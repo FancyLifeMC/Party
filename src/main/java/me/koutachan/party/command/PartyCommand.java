@@ -2,7 +2,9 @@ package me.koutachan.party.command;
 
 import dev.jorel.commandapi.annotations.Command;
 import dev.jorel.commandapi.annotations.Subcommand;
+import dev.jorel.commandapi.annotations.arguments.APlayerArgument;
 import dev.jorel.commandapi.annotations.arguments.AStringArgument;
+import me.koutachan.party.Party;
 import me.koutachan.party.data.PartyDataManager;
 import me.koutachan.party.data.PartyGroup;
 import org.bukkit.entity.Player;
@@ -14,9 +16,11 @@ public class PartyCommand {
         PartyGroup group = PartyDataManager.getGroup(player);
 
         if (group == null) {
-            PartyDataManager.createParty(player);
-        } else {
+            PartyDataManager.createParty(new PartyGroup(player, player.getUniqueId()));
 
+            player.sendMessage(Party.getInstance().getString("create-party"));
+        } else {
+            player.sendMessage(Party.getInstance().getString("already-joined-party").replaceAll("%user%", group.getTargetPartyGroup().getPlayer().getName()));
         }
     }
 
@@ -26,12 +30,14 @@ public class PartyCommand {
 
         if (group != null) {
             if (group.isOwner()) {
-                PartyDataManager.removeParty(player);
-            } else {
+                PartyDataManager.removeParty(group);
 
+                player.sendMessage(Party.getInstance().getString("delete-party"));
+            } else {
+                player.sendMessage(Party.getInstance().getString("not-party-owner"));
             }
         } else {
-
+            player.sendMessage(Party.getInstance().getString("not-joined-party"));
         }
     }
 
@@ -43,6 +49,8 @@ public class PartyCommand {
             final boolean value = !group.isToggledChat();
 
             group.setToggledChat(value);
+        } else {
+            player.sendMessage(Party.getInstance().getString("not-joined-party"));
         }
     }
 
@@ -52,11 +60,28 @@ public class PartyCommand {
 
         if (group != null) {
             group.chat(text);
+        } else {
+            player.sendMessage(Party.getInstance().getString("not-joined-party"));
+        }
+    }
+
+    @Subcommand("invite")
+    public static void onInviteParty(Player player, @APlayerArgument Player target) {
+        PartyGroup group = PartyDataManager.getGroup(player);
+
+        if (group != null) {
+            if (group.isOwner()) {
+
+            } else {
+                player.sendMessage(Party.getInstance().getString("not-party-owner"));
+            }
+        } else {
+            player.sendMessage(Party.getInstance().getString("not-joined-party"));
         }
     }
 
     @Subcommand("leave")
-    public static void onLeave(Player player) {
+    public static void onLeaveParty(Player player) {
         PartyGroup group = PartyDataManager.getGroup(player);
 
         if (group != null) {
@@ -66,7 +91,7 @@ public class PartyCommand {
 
             }
         } else {
-            //todo:; add messages
+            player.sendMessage(Party.getInstance().getString("not-joined-party"));
         }
     }
 }

@@ -71,6 +71,10 @@ public class PartyGroup {
         return owner;
     }
 
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
     public void chat(String message) {
         getTargetPartyGroup().getPartyUsers().forEach(v -> {
             v.getPlayer().sendMessage(message);

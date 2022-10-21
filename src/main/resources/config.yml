@@ -4,5 +4,6 @@ messages:
   already-joined-party: '[Party] 既にパーティーに入っています！ (%user% のパーティー)'
   toggle-chat-on: '[Party] パーティーチャットをオンにしました'
   toggle-chat-off: '[Party] パーティーチャットをオフにしました'
-  not-owner: '[Party] あなたはこのパーティーのオーナーではありません！'
+  not-party-owner: '[Party] あなたはこのパーティーのオーナーではありません！'
+  not-joined-party: '[Party] あなたはパーティーに参加していません！'
   party-chat: '[Party] <%name%>: %chat%'
