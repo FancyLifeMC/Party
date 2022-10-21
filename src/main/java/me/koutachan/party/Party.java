@@ -1,16 +1,14 @@
 package me.koutachan.party;
 
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
-import dev.jorel.commandapi.arguments.TextArgument;
 import me.koutachan.party.command.PartyCommand;
-import me.koutachan.party.data.PartyDataManager;
-import me.koutachan.party.data.PartyGroup;
 import me.koutachan.party.event.EventListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
 
 public final class Party extends JavaPlugin {
 
@@ -35,6 +33,7 @@ public final class Party extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        CommandAPI.onDisable();
         // Plugin shutdown logic
     }
 
@@ -43,6 +42,12 @@ public final class Party extends JavaPlugin {
     }
 
     public String getString(String key) {
-        return ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages." + key));
+        Object object = getConfig().get("messages." + key);
+
+        return ChatColor.translateAlternateColorCodes('&', object instanceof String ? (String) object : String.join("\n", (List<String>) object));
+    }
+
+    public int getInt(String key) {
+        return getConfig().getInt(key);
     }
 }

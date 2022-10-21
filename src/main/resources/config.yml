@@ -1,7 +1,13 @@
+settings:
+  invite-delete-ticks: 3600
 messages:
   create-party: '[Party] パーティーを作成しました'
   delete-party: '[Party] パーティーを削除しました'
+  disband-party: '[Party] パーティーは解散されました'
+  this-user-already-joined-party: '[Party] 招待しようとしたプレイヤーは既にパーティーに入っています！'
   already-joined-party: '[Party] 既にパーティーに入っています！ (%user% のパーティー)'
+  already-invited-party: '[Party] 既にパーティーに招待しています！'
+  invite-party: '[Party] %user% をパーティーに招待しました！'
   toggle-chat-on: '[Party] パーティーチャットをオンにしました'
   toggle-chat-off: '[Party] パーティーチャットをオフにしました'
   not-party-owner: '[Party] あなたはこのパーティーのオーナーではありません！'

@@ -1,8 +1,8 @@
 package me.koutachan.party.data;
 
+import me.koutachan.party.Party;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +24,11 @@ public class PartyDataManager {
      * <li>安全にパーティーを削除します
      */
     public static void removeParty(PartyGroup group) {
+        String messages = Party.getInstance().getString("disband-party");
+
         group.getTargetPartyGroup().getPartyUsers().forEach(v -> {
+            v.getPlayer().sendMessage(messages);
+
             party.remove(v.getPlayer().getUniqueId());
         });
     }

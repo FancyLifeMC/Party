@@ -15,4 +15,14 @@ public class EventListener implements Listener {
             group.chat(event.getMessage());
         }
     }
+
+    //Hard Coded
+    /*@EventHandler
+    public void onQuitEvent(PlayerQuitEvent event) {
+        PartyGroup group = PartyDataManager.getGroup(event.getPlayer());
+
+        if (group != null) {
+            PartyDataManager.leaveParty(group);
+        }
+    }*/
 }

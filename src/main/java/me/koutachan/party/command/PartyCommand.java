@@ -4,9 +4,10 @@ import dev.jorel.commandapi.annotations.Command;
 import dev.jorel.commandapi.annotations.Subcommand;
 import dev.jorel.commandapi.annotations.arguments.APlayerArgument;
 import dev.jorel.commandapi.annotations.arguments.AStringArgument;
-import me.koutachan.party.Party;
 import me.koutachan.party.data.PartyDataManager;
 import me.koutachan.party.data.PartyGroup;
+import me.koutachan.party.data.temporary.TemporaryInvite;
+import me.koutachan.party.util.Conditions;
 import org.bukkit.entity.Player;
 
 @Command("party")
@@ -18,9 +19,9 @@ public class PartyCommand {
         if (group == null) {
             PartyDataManager.createParty(new PartyGroup(player, player.getUniqueId()));
 
-            player.sendMessage(Party.getInstance().getString("create-party"));
+            Conditions.sendMessageYaml(player, "create-party");
         } else {
-            player.sendMessage(Party.getInstance().getString("already-joined-party").replaceAll("%user%", group.getTargetPartyGroup().getPlayer().getName()));
+            Conditions.sendMessageYaml(player, "already-joined-party");
         }
     }
 
@@ -32,12 +33,12 @@ public class PartyCommand {
             if (group.isOwner()) {
                 PartyDataManager.removeParty(group);
 
-                player.sendMessage(Party.getInstance().getString("delete-party"));
+                Conditions.sendMessageYaml(player, "delete-party");
             } else {
-                player.sendMessage(Party.getInstance().getString("not-party-owner"));
+                Conditions.sendMessageYaml(player, "not-party-owner");
             }
         } else {
-            player.sendMessage(Party.getInstance().getString("not-joined-party"));
+            Conditions.sendMessageYaml(player, "not-joined-party");
         }
     }
 
@@ -50,7 +51,7 @@ public class PartyCommand {
 
             group.setToggledChat(value);
         } else {
-            player.sendMessage(Party.getInstance().getString("not-joined-party"));
+            Conditions.sendMessageYaml(player, "not-joined-party");
         }
     }
 
@@ -61,7 +62,7 @@ public class PartyCommand {
         if (group != null) {
             group.chat(text);
         } else {
-            player.sendMessage(Party.getInstance().getString("not-joined-party"));
+            Conditions.sendMessageYaml(player, "not-joined-party");
         }
     }
 
@@ -71,12 +72,18 @@ public class PartyCommand {
 
         if (group != null) {
             if (group.isOwner()) {
+                PartyGroup targetGroup = PartyDataManager.getGroup(target);
 
+                if (targetGroup == null) {
+                    Conditions.sendMessageYaml(player, TemporaryInvite.put(target.getUniqueId(), group) ? "already-invited-party" : "invite-party");
+                } else {
+                    Conditions.sendMessageYaml(player, "this-user-already-joined-party");
+                }
             } else {
-                player.sendMessage(Party.getInstance().getString("not-party-owner"));
+                Conditions.sendMessageYaml(player, "not-party-owner");
             }
         } else {
-            player.sendMessage(Party.getInstance().getString("not-joined-party"));
+            Conditions.sendMessageYaml(player, "not-joined-party");
         }
     }
 
@@ -91,7 +98,7 @@ public class PartyCommand {
 
             }
         } else {
-            player.sendMessage(Party.getInstance().getString("not-joined-party"));
+            Conditions.sendMessageYaml(player, "not-joined-party");
         }
     }
 }
