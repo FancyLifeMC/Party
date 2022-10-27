@@ -7,11 +7,11 @@ import dev.jorel.commandapi.annotations.arguments.AStringArgument;
 import me.koutachan.party.data.PartyDataManager;
 import me.koutachan.party.data.PartyGroup;
 import me.koutachan.party.data.temporary.TemporaryInvite;
-import me.koutachan.party.util.Conditions;
+import me.koutachan.party.util.Message;
 import org.bukkit.entity.Player;
 
 @Command("party")
-public class PartyCommand {
+public class PartyCommand extends Message {
     @Subcommand("create")
     public static void onCreateParty(Player player) {
         PartyGroup group = PartyDataManager.getGroup(player);
@@ -19,9 +19,9 @@ public class PartyCommand {
         if (group == null) {
             PartyDataManager.createParty(new PartyGroup(player, player.getUniqueId()));
 
-            Conditions.sendMessageYaml(player, "create-party");
+            sendMessageYaml(player, "create-party");
         } else {
-            Conditions.sendMessageYaml(player, "already-joined-party");
+            sendMessage(group, "already-joined-party");
         }
     }
 
@@ -29,16 +29,35 @@ public class PartyCommand {
     public static void onDeleteParty(Player player) {
         PartyGroup group = PartyDataManager.getGroup(player);
 
-        if (group != null) {
-            if (group.isOwner()) {
-                PartyDataManager.removeParty(group);
+        if (group == null) {
+            sendMessageYaml(player, "not-joined-party");
+            return;
+        }
 
-                Conditions.sendMessageYaml(player, "delete-party");
-            } else {
-                Conditions.sendMessageYaml(player, "not-party-owner");
-            }
+        if (group.isOwner()) {
+            PartyDataManager.removeParty(group);
+
+            sendMessageYaml(player, "delete-party");
         } else {
-            Conditions.sendMessageYaml(player, "not-joined-party");
+            sendMessageYaml(player, "not-party-owner");
+        }
+    }
+
+    @Subcommand("join")
+    public static void onPartyJoin(Player player, @APlayerArgument Player target) {
+        PartyGroup group = PartyDataManager.getGroup(player);
+
+        if (group != null) {
+            sendMessage(player, "already-joined-party");
+            return;
+        }
+
+        PartyGroup groupOfInvited = TemporaryInvite.remove(player.getUniqueId(), target.getUniqueId());
+
+        if (groupOfInvited != null) {
+            sendMessage(PartyDataManager.createParty(new PartyGroup(player, target.getUniqueId())), "joined-party");
+        } else {
+            sendMessageYaml(player, "not-founded-party");
         }
     }
 
@@ -50,8 +69,9 @@ public class PartyCommand {
             final boolean value = !group.isToggledChat();
 
             group.setToggledChat(value);
+            sendMessageYaml(player, value ? "toggle-chat-on" : "toggle-chat-off");
         } else {
-            Conditions.sendMessageYaml(player, "not-joined-party");
+            sendMessageYaml(player, "not-joined-party");
         }
     }
 
@@ -60,9 +80,9 @@ public class PartyCommand {
         PartyGroup group = PartyDataManager.getGroup(player);
 
         if (group != null) {
-            group.chat(text);
+            group.chatPlayer(player, text);
         } else {
-            Conditions.sendMessageYaml(player, "not-joined-party");
+            sendMessageYaml(player, "not-joined-party");
         }
     }
 
@@ -70,20 +90,24 @@ public class PartyCommand {
     public static void onInviteParty(Player player, @APlayerArgument Player target) {
         PartyGroup group = PartyDataManager.getGroup(player);
 
-        if (group != null) {
-            if (group.isOwner()) {
-                PartyGroup targetGroup = PartyDataManager.getGroup(target);
+        if (group == null) {
+            sendMessageYaml(player, "not-joined-party");
+            return;
+        }
 
-                if (targetGroup == null) {
-                    Conditions.sendMessageYaml(player, TemporaryInvite.put(target.getUniqueId(), group) ? "already-invited-party" : "invite-party");
-                } else {
-                    Conditions.sendMessageYaml(player, "this-user-already-joined-party");
-                }
+        player.sendMessage(target.getName());
+
+        if (group.isOwner()) {
+            PartyGroup targetGroup = PartyDataManager.getGroup(target);
+
+            if (targetGroup == null) {
+                sendMessageYaml(player, TemporaryInvite.put(target.getUniqueId(), group) ? "already-invited-party" : "invite-party");
+                sendMessageYaml(target, "invite-party-target");
             } else {
-                Conditions.sendMessageYaml(player, "not-party-owner");
+                sendMessageYaml(player, "this-user-already-joined-party");
             }
         } else {
-            Conditions.sendMessageYaml(player, "not-joined-party");
+            sendMessageYaml(player, "not-party-owner");
         }
     }
 
@@ -91,14 +115,17 @@ public class PartyCommand {
     public static void onLeaveParty(Player player) {
         PartyGroup group = PartyDataManager.getGroup(player);
 
-        if (group != null) {
-            if (!group.isOwner()) {
-                PartyDataManager.leaveParty(group);
-            } else {
-
-            }
-        } else {
-            Conditions.sendMessageYaml(player, "not-joined-party");
+        if (group == null) {
+            sendMessageYaml(player, "not-joined-party");
+            return;
         }
+
+        if (group.isOwner()) {
+            sendMessageYaml(player, "cannot-leave-party-owner");
+            return;
+        }
+
+        group.chatYaml(PartyDataManager.leaveParty(group), "leave-party-everyone");
+        sendMessageYaml(player, "leave-party");
     }
 }

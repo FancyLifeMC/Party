@@ -36,12 +36,14 @@ public class PartyDataManager {
     /**
      * @param group パーティーから削除するプレイヤー
      */
-    public static void leaveParty(PartyGroup group) {
+    public static PartyGroup leaveParty(PartyGroup group) {
         group.getTargetPartyGroup().getPartyUsers().remove(group);
+        return group;
     }
 
-    public static void createParty(PartyGroup group) {
+    public static PartyGroup createParty(PartyGroup group) {
         party.put(group.getPlayer().getUniqueId(), group);
+        return group;
     }
 
     @Deprecated

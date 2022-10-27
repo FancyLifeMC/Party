@@ -1,5 +1,6 @@
 package me.koutachan.party.data;
 
+import me.koutachan.party.Party;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -74,9 +75,21 @@ public class PartyGroup {
         this.owner = owner;
     }
 
-    public void chat(String message) {
+    public void chatPlayer(Player player, String message) {
+        chat(player, Party.getInstance().getString("party-chat").replaceAll("%user%", player.getName()).replaceAll("%chat%", message));
+    }
+
+    public void chat(Player player, String message) {
         getTargetPartyGroup().getPartyUsers().forEach(v -> {
-            v.getPlayer().sendMessage(message);
+            v.getPlayer().sendMessage(message.replaceAll("%user%", player.getName()));
         });
+    }
+
+    public void chatYaml(Player player, String yamlKey) {
+        chat(player, Party.getInstance().getString(yamlKey));
+    }
+
+    public void chatYaml(PartyGroup group, String yamlKey) {
+        chat(group.getPlayer(), Party.getInstance().getString(yamlKey));
     }
 }
