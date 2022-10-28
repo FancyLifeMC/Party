@@ -95,19 +95,23 @@ public class PartyCommand extends Message {
             return;
         }
 
-        player.sendMessage(target.getName());
+        if (!group.isOwner()) {
+            sendMessageYaml(player, "not-party-owner");
+            return;
+        }
 
-        if (group.isOwner()) {
-            PartyGroup targetGroup = PartyDataManager.getGroup(target);
+        PartyGroup targetGroup = PartyDataManager.getGroup(target);
 
-            if (targetGroup == null) {
-                sendMessageYaml(player, TemporaryInvite.put(target.getUniqueId(), group) ? "already-invited-party" : "invite-party");
+        if (targetGroup == null) {
+            final boolean userAlreadyInvited = TemporaryInvite.put(player.getUniqueId(), group);
+
+            sendMessageYaml(player, userAlreadyInvited ? "already-invited-party" : "invite-party");
+
+            if (!userAlreadyInvited) {
                 sendMessageYaml(target, "invite-party-target");
-            } else {
-                sendMessageYaml(player, "this-user-already-joined-party");
             }
         } else {
-            sendMessageYaml(player, "not-party-owner");
+            sendMessageYaml(player, "this-user-already-joined-party");
         }
     }
 

@@ -34,13 +34,13 @@ public class TemporaryInvite {
         final boolean containsKey = newInvites.containsKey(group.getTargetPartyUUID());
 
         if (!containsKey) {
-            newInvites.put(user, group);
+            newInvites.put(group.getTargetPartyUUID(), group);
 
             Bukkit.getScheduler().runTaskTimerAsynchronously(Party.getInstance(), () -> {
-                remove(user, group);
+                remove(group.getTargetPartyUUID(), group);
             }, 0, Party.getInstance().getInt("settings.invite-delete-ticks"));
 
-            //Accepted New Invite
+            //Accept New Invite
             temporaryInvite.put(user, newInvites);
         }
 
