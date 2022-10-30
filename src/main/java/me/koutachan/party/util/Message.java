@@ -24,8 +24,8 @@ public class Message {
                 .replaceAll("%owner%", group.getTargetPartyGroup().getPlayer().getName());
     }
 
-    public static void sendMessageYaml(Player target, PartyGroup group, String yamlKey) {
-        sendMessage(target, getString(group, yamlKey));
+    public static void sendMessageYaml(Player target, Player user, String yamlKey) {
+        target.sendMessage(Party.getInstance().getString(yamlKey).replaceAll("%user%", user.getPlayer().getName()).replaceAll("%owner%", user.getPlayer().getName()));
     }
 
     public static void sendMessageYaml(Player player, String yamlKey) {

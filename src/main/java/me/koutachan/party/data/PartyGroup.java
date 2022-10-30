@@ -3,9 +3,7 @@ package me.koutachan.party.data;
 import me.koutachan.party.Party;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PartyGroup {
     private final Player player;
@@ -24,7 +22,11 @@ public class PartyGroup {
         this.owner = player.getUniqueId().equals(targetParty);
 
         if (owner) {
-            partyUsers = Arrays.asList(this);
+            partyUsers = new ArrayList<>() {{
+                add(PartyGroup.this);
+            }};
+        } else {
+            getTargetPartyGroup().getPartyUsers().add(this);
         }
     }
 

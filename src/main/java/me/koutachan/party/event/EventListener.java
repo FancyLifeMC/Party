@@ -14,6 +14,8 @@ public class EventListener implements Listener {
 
         if (group != null && group.isToggledChat()) {
             group.chatPlayer(event.getPlayer(), event.getMessage());
+
+            event.setCancelled(true);
         }
     }
 

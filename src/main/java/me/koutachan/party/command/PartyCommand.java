@@ -48,7 +48,7 @@ public class PartyCommand extends Message {
         PartyGroup group = PartyDataManager.getGroup(player);
 
         if (group != null) {
-            sendMessage(player, "already-joined-party");
+            sendMessage(group, "already-joined-party");
             return;
         }
 
@@ -102,14 +102,13 @@ public class PartyCommand extends Message {
 
         PartyGroup targetGroup = PartyDataManager.getGroup(target);
 
-        if (targetGroup == null) {
-            final boolean userAlreadyInvited = TemporaryInvite.put(player.getUniqueId(), group);
-
-            sendMessageYaml(player, userAlreadyInvited ? "already-invited-party" : "invite-party");
-
-            if (!userAlreadyInvited) {
-                sendMessageYaml(target, "invite-party-target");
+        if (targetGroup == null){
+            if (TemporaryInvite.put(target.getUniqueId(), group))  {
+                sendMessage(group,  "already-invited-party");
+                return;
             }
+            sendMessageYaml(player, target, "invite-party");
+            sendMessageYaml(target, player, "invite-party-target");
         } else {
             sendMessageYaml(player, "this-user-already-joined-party");
         }
