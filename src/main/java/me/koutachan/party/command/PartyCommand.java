@@ -56,7 +56,7 @@ public class PartyCommand extends Message {
 
         if (groupOfInvited != null) {
             sendMessage(PartyDataManager.createParty(new PartyGroup(player, target.getUniqueId())), "joined-party");
-            groupOfInvited.chatYaml(player, "joined-party-everyone");
+            groupOfInvited.chatYaml(player, groupOfInvited, "joined-party-everyone");
             //全てのパーティー招待を消す
             TemporaryInvite.removeAllInvite(player.getUniqueId());
         } else {

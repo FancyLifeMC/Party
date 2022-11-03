@@ -91,6 +91,10 @@ public class PartyGroup {
         chat(player, Party.getInstance().getString(yamlKey));
     }
 
+    public void chatYaml(Player player, PartyGroup group, String yamlKey) {
+        chat(player, Party.getInstance().getString(yamlKey).replaceAll("%owner%", group.getTargetPartyGroup().getPlayer().getName()));
+    }
+
     public void chatYaml(PartyGroup group, String yamlKey) {
         chat(group.getPlayer(), Party.getInstance().getString(yamlKey));
     }
