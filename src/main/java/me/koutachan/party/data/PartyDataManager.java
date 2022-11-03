@@ -38,6 +38,7 @@ public class PartyDataManager {
      */
     public static PartyGroup leaveParty(PartyGroup group) {
         group.getTargetPartyGroup().getPartyUsers().remove(group);
+        party.remove(group.getPlayer().getUniqueId(), group);
         return group;
     }
 
