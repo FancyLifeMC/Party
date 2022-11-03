@@ -37,7 +37,10 @@ public class TemporaryInvite {
             newInvites.put(group.getTargetPartyUUID(), group);
 
             Bukkit.getScheduler().runTaskTimerAsynchronously(Party.getInstance(), () -> {
-                remove(group.getTargetPartyUUID(), group);
+                PartyGroup targetOfGroup = remove(group.getTargetPartyUUID(), group);
+                if (targetOfGroup != null) {
+                    //Todo: Add Expire Message...
+                }
             }, 0, Party.getInstance().getInt("settings.invite-delete-ticks"));
 
             //Accept New Invite
@@ -58,5 +61,9 @@ public class TemporaryInvite {
             return invites.remove(uuid);
         }
         return null;
+    }
+
+    public static Map<UUID, PartyGroup> removeAllInvite(UUID user) {
+        return temporaryInvite.remove(user);
     }
 }

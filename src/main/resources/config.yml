@@ -13,7 +13,12 @@ messages:
   already-joined-party: '[Party] 既にパーティーに入っています！ (%owner% のパーティー)'
   already-invited-party: '[Party] 既にパーティーに招待しています！'
   joined-party: '[Party] %owner% のパーティーに参加しました！'
+  joined-party-everyone: '[Party] %user% がパーティーに参加しました！'
   invite-party: '[Party] %user% をパーティーに招待しました！'
+  invite-expire:
+    - '[Party] %owner% のパーティー招待が無効になりました'
+  invite-expire-everyone:
+    - '[Party] %user% のパーティーの招待が無効になりました'
   invite-party-target:
     - '[Party] %owner% にパーティーを招待されました！'
     - '/party join %owner% で参加可能です'

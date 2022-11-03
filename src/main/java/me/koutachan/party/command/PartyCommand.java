@@ -52,10 +52,13 @@ public class PartyCommand extends Message {
             return;
         }
 
-        PartyGroup groupOfInvited = TemporaryInvite.remove(player.getUniqueId(), target.getUniqueId());
+        PartyGroup groupOfInvited = TemporaryInvite.get(player.getUniqueId(), target.getUniqueId());
 
         if (groupOfInvited != null) {
             sendMessage(PartyDataManager.createParty(new PartyGroup(player, target.getUniqueId())), "joined-party");
+            groupOfInvited.chatYaml(player, "joined-party-everyone");
+            //全てのパーティー招待を消す
+            TemporaryInvite.removeAllInvite(player.getUniqueId());
         } else {
             sendMessageYaml(player, "not-founded-party");
         }
