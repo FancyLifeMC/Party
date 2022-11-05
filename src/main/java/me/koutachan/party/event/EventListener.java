@@ -6,8 +6,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class EventListener implements Listener {
+    @EventHandler
+    public void onJoinEvent(PlayerJoinEvent event) {
+        PartyGroup group = PartyDataManager.getGroup(event.getPlayer());
+
+        if (group != null) {
+            group.setPlayer(event.getPlayer());
+        }
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onChatEvent(AsyncPlayerChatEvent event) {
         PartyGroup group = PartyDataManager.getGroup(event.getPlayer());

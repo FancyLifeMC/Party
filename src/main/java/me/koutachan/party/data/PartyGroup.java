@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class PartyGroup {
-    private final Player player;
+    private Player player;
     private final UUID targetParty;
 
     private List<PartyGroup> partyUsers;
@@ -59,6 +59,10 @@ public class PartyGroup {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public boolean isToggledChat() {

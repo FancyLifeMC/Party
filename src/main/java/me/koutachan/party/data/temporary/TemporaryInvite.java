@@ -37,7 +37,7 @@ public class TemporaryInvite {
             newInvites.put(group.getTargetPartyUUID(), group);
 
             Bukkit.getScheduler().runTaskTimerAsynchronously(Party.getInstance(), () -> {
-                PartyGroup targetOfGroup = remove(group.getTargetPartyUUID(), group);
+                PartyGroup targetOfGroup = remove(user, group);
                 if (targetOfGroup != null) {
                     //Todo: Add Expire Message...
                 }
